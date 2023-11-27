@@ -15,9 +15,13 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+.transition-transform {
+  transition-duration: 2s; /* Adjust the duration as needed */
+}
 
 body {
   color: rgb(var(--foreground-rgb));
+  overflow-x: hidden;
   background: linear-gradient(
       to bottom,
       transparent,
