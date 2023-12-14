@@ -1,22 +1,61 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useState,useContext } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { CartContext } from "@/app/components/CartContext";
+import { useEffect } from "react";
 export default function Page({ params }) {
+  const { addCart } = useContext(CartContext);
+  const [tshirts, setTshirts] = useState([]);
+  const [error, setError] = useState(null);
+    // const notify = () => toast("Wow so easy!");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/products");
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const data = await response.json();
+        
+        // Ensure that data is an array before setting state
+        if (Array.isArray(data)) {
+          setTshirts(data);
+        } else {
+          // throw new Error('Invalid data structure received');
+          setTshirts(Object.values(data))
+          console.log(Object.values(data))
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
   const [pin, setpin] = useState();
   const changepin = (e) => {
     setpin(e.target.value);
   };
+  
   const [Availabiltiy, setAvailabiltiy] = useState();
   const checkavailability = async (e) => {
     e.preventDefault();
 
-    console.log("Checcking Availabiltiy");
+    console.log("Checking Availability");
     let res = await fetch("http://localhost:3000/api/pincode");
     console.log(res);
     let pindata = await res.json();
-    let enteredPin = pin; // Use a different variable to store the entered pin
+    let enteredPin = pin;
+
     setpin("");
 
     console.log(pindata);
@@ -24,10 +63,13 @@ export default function Page({ params }) {
     if (pindata.includes(parseInt(enteredPin))) {
       console.log("Service can be given");
       setAvailabiltiy(true);
+      toast.success("Yes, service is available at this pincode");
     } else {
-      console.log("Service cant be given");
+      console.log("Service can't be given");
       setAvailabiltiy(false);
+      toast.error("Sorry, we don't serve in the area as of now");
     }
+  
   };
   return (<>
     <Navbar/>
@@ -188,7 +230,8 @@ export default function Page({ params }) {
               <span className="title-font font-medium text-2xl text-white">
                 $58.00
               </span>
-              <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+              {/* (itemcode, qty, item_name, price, size, variant) */}
+              <button onClick={()=>{addCart("tshirt123",1,"wear-the-code","499","XL","red")}}className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
                 Add To Cart
               </button>
               <button className="rounded-full w-10 h-10 bg-gray-800 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
@@ -219,12 +262,16 @@ export default function Page({ params }) {
               </button>
             </form>
             {Availabiltiy!==undefined?(Availabiltiy?(<span className="mt-5 text-green-500">Yes Service is available at this pincode</span>):(<span className="mt-5 text-red-500">Sorry We dont serve in the area as of now</span>)):null}
+       
+
           </div>
         </div>
       </div>
       
     </section>
     <Footer/>
+    <ToastContainer />
+
 
     </>
   );
