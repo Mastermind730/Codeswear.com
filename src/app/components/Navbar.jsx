@@ -8,6 +8,9 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { CartContext } from "./CartContext";
 import LoadingBar from "react-top-loading-bar";
+import { getServerSession } from "next-auth";
+import { options } from "../../lib/options";
+
 
 const navlinks = [
   {
@@ -31,7 +34,7 @@ const navlinks = [
     path: "/mugs",
   },
 ];
-const Navbar = () => {
+const Navbar =  () => {
   const { cart, total, addCart, clearCart, deleteCart } =
     useContext(CartContext);
   const [log, setlog] = useState(false);

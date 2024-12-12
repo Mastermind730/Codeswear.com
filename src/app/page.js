@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import LoadingBar from 'react-top-loading-bar'
+import Banner from "./components/MainBanner";
+import AwardSection from "./components/Awards";
+import FacultyCoordinators from "./components/FacultiesSection";
 
 
 
@@ -82,7 +85,7 @@ export default function Home() {
    />
       <Navbar 
       />
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      {/* <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <section className="text-gray-400 body-font bg-gray-900">
           <div className="container px-5 py-24 mx-auto">
             <div className="flex flex-col text-center w-full mb-20">
@@ -198,7 +201,10 @@ export default function Home() {
             </button>
           </div>
         </section>
-      </main>
+      </main> */}
+      <Banner/>
+      <AwardSection/>
+      <FacultyCoordinators/>
       <Footer />
     </>
   );
